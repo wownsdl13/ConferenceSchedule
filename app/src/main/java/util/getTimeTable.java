@@ -17,6 +17,7 @@ import java.util.HashMap;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import server.GetTimeTableServer;
 import server.ServerRoot;
@@ -27,9 +28,11 @@ public class getTimeTable {
     private TextView timeText;
     private HashMap<Integer, ConferenceBookVO> list = new HashMap<Integer, ConferenceBookVO>();
     private Adapter adapter;
+    private RecyclerView recyclerView;
 
     public getTimeTable(Activity activity) {
         this.activity = activity;
+        recyclerView = activity.findViewById(R.id.recyclerView);
         leftBtn = activity.findViewById(R.id.leftBtn);
         rightBtn = activity.findViewById(R.id.rightBtn);
         timeText = activity.findViewById(R.id.timeText);
@@ -46,7 +49,16 @@ public class getTimeTable {
             }
         });
         adapter = new Adapter();
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.VERTICAL, false));
 
+        list.put(20190615, new ConferenceBookVO(1, 1, 201906150930L, 0, "연구실 회의"));
+        list.put(20190615, new ConferenceBookVO(1, 1, 201906151000L, 0, "연구실 회의"));
+        list.put(20190615, new ConferenceBookVO(1, 1, 201906151030L, 0, "연구실 회의"));
+
+        list.put(20190615, new ConferenceBookVO(1, 2, 201906151200L, 0, "코틀린 jetpack 스터디"));
+        list.put(20190615, new ConferenceBookVO(1, 2, 201906151230L, 0, "코틀린 jetpack 스터디"));
+        adapter.notifyDataSetChanged();
     }
 
     private void setDate(long date) throws JSONException {
@@ -68,9 +80,9 @@ public class getTimeTable {
                     JSONArray array = o.getJSONArray("array");
                     for(int i = 0; i<array.length(); i++){
                         JSONObject object = array.getJSONObject(i);
-                        ConferenceBookVO vo = new ConferenceBookVO(object.getInt("pk"), object.getInt("bookPk"), object.getInt("time"), object.getInt("confirm"), object.getString("title"));
-                        int time = vo.getTime()%10000;
-                        int hour = time/100 - 9;
+                        ConferenceBookVO vo = new ConferenceBookVO(object.getInt("pk"), object.getInt("bookPk"), object.getLong("time"), object.getInt("confirm"), object.getString("title"));
+                        long time = vo.getTime()%10000;
+                        int hour = (int) (time/100 - 9);
                         int minute = time%100==30?1:0;
                         list.put(hour+minute, vo);
                     }

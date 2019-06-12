@@ -1,10 +1,11 @@
 package util;
 
 public class ConferenceBookVO {
-    private int pk, bookPk, time, confirm;
+    private int pk, bookPk,  confirm;
+    private long time;
     private String title;
 
-    public ConferenceBookVO(int pk, int bookPk, int time, int confirm, String title) {
+    public ConferenceBookVO(int pk, int bookPk, long time, int confirm, String title) {
         this.pk = pk;
         this.bookPk = bookPk;
         this.time = time;
@@ -20,7 +21,7 @@ public class ConferenceBookVO {
         return bookPk;
     }
 
-    public int getTime() {
+    public long getTime() {
         return time;
     }
 
