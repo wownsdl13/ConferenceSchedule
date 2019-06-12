@@ -52,12 +52,12 @@ public class getTimeTable {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.VERTICAL, false));
 
-        list.put(20190615, new ConferenceBookVO(1, 1, 201906150930L, 0, "연구실 회의"));
-        list.put(20190615, new ConferenceBookVO(1, 1, 201906151000L, 0, "연구실 회의"));
-        list.put(20190615, new ConferenceBookVO(1, 1, 201906151030L, 0, "연구실 회의"));
+        list.put(1, new ConferenceBookVO(1, 1, 201906150930L, 0, "연구실 회의"));
+        list.put(2, new ConferenceBookVO(1, 1, 201906151000L, 0, "연구실 회의"));
+        list.put(3, new ConferenceBookVO(1, 1, 201906151030L, 0, "연구실 회의"));
 
-        list.put(20190615, new ConferenceBookVO(1, 2, 201906151200L, 0, "코틀린 jetpack 스터디"));
-        list.put(20190615, new ConferenceBookVO(1, 2, 201906151230L, 0, "코틀린 jetpack 스터디"));
+        list.put(6, new ConferenceBookVO(1, 2, 201906151200L, 0, "코틀린 jetpack 스터디"));
+        list.put(7, new ConferenceBookVO(1, 2, 201906151230L, 0, "코틀린 jetpack 스터디"));
         adapter.notifyDataSetChanged();
     }
 
@@ -102,6 +102,8 @@ public class getTimeTable {
         @Override
         public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View v = View.inflate(activity, R.layout.conference_table, null);
+            RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            v.setLayoutParams(params);
             return new Holder(v);
         }
 
@@ -109,7 +111,11 @@ public class getTimeTable {
         public void onBindViewHolder(@NonNull Holder holder, int position) {
             TextView titleText = (TextView) holder.titleText;
             TextView timeText = holder.timeText;
-            timeText.setText(((position/2)+9)+" : "+(position%2==0?0:30));
+            int hour = ((position/2)+9);
+            String hourStr = hour<10?"0"+hour:String.valueOf(hour);
+            int minute = (position%2==0?0:30);
+            String minuteStr =  minute<10?"0"+minute:String.valueOf(minute);
+            timeText.setText(hourStr+" : "+minuteStr);
             if(list.containsKey(position)){
                 ConferenceBookVO vo = list.get(position);
                 if(position>0 && list.containsKey(position-1) && list.get(position-1).getBookPk() == vo.getBookPk()){
